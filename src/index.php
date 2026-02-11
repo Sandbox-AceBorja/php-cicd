@@ -202,6 +202,11 @@ try {
                 <li>✓ PHP syntax validation</li>
                 <li>✓ MySQL database integration</li>
             </ul>
+            <br>
+            <h3>ℹ️ About Me:</h3>
+            <p>Developed by <b>Ace Borja</b></p>
+            <p>Follow me on <a href="https://github.com/Sandbox-AceBorja">GitHub</a> for more projects!</p>
+            
         </div>
     </div>
 </body>
