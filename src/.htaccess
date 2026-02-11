@@ -3,27 +3,3 @@
     Order Allow,Deny
     Deny from all
 </Files>
-
-# Protect .git directory
-<DirectoryMatch "\.git">
-    Order Allow,Deny
-    Deny from all
-</DirectoryMatch>
-
-# Protect sensitive files
-<FilesMatch "^(\.env|\.gitignore|composer\.json|composer\.lock)$">
-    Order Allow,Deny
-    Deny from all
-</FilesMatch>
-
-# Enable PHP error logging (disable display for production)
-php_flag display_errors Off
-php_flag log_errors On
-php_value error_log /home/your_account/logs/php_errors.log
-
-# Security headers
-<IfModule mod_headers.c>
-    Header set X-Content-Type-Options "nosniff"
-    Header set X-Frame-Options "SAMEORIGIN"
-    Header set X-XSS-Protection "1; mode=block"
-</IfModule>
