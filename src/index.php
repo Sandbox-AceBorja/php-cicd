@@ -206,6 +206,7 @@ try {
             <h3>ℹ️ About Me:</h3>
             <p>Developed by <b>Ace Borja</b></p>
             <p>Follow me on <a href="https://github.com/Sandbox-AceBorja">GitHub</a> for more projects!</p>
+            <p>Visit my <a href="https://aceborja.vercel.app/">Portfolio</a> for more information!</p>
             
         </div>
     </div>
