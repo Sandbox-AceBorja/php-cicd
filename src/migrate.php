@@ -9,10 +9,10 @@
  */
 
 // Database configuration
-$host = 'sql212.infinityfree.com'; // Update with your host
-$db = 'if0_41129394_myapp';
+$host = 'sql309.infinityfree.com';
+$db = 'if0_41129394_myapp_db';
 $user = 'if0_41129394';
-$pass = 'YOUR_DATABASE_PASSWORD';
+$pass = 'mTwxVdLtdP';
 
 // Simple password protection (change this!)
 $migration_password = 'your_secret_password_123';
