@@ -26,6 +26,19 @@ jobs:
       run: |
         echo "✓ PHP syntax validation passed"
 
+    - name: Validate SQL migrations
+      run: |
+        if [ -d migrations ]; then
+          echo "Checking SQL files..."
+          for file in migrations/*.sql; do
+            if [ -f "$file" ]; then
+              echo "✓ Found: $file"
+            fi
+          done
+        else
+          echo "No migrations directory found"
+        fi
+
   deploy:
     needs: test
     runs-on: ubuntu-latest
@@ -51,7 +64,21 @@ jobs:
           **/.env
           **/README.md
 
+    - name: Deploy migrations
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./migrations/
+        server-dir: /htdocs/migrations/
+
     - name: Deployment Success
       run: |
         echo "✓ Deployment completed successfully!"
         echo "🌐 Your site: https://php-cicd.free.nf"
+        echo ""
+        echo "📝 Next steps:"
+        echo "1. Visit: https://php-cicd.free.nf/migrate.php?password=your_secret_password_123"
+        echo "2. Run pending migrations"
+        echo "3. Delete migrate.php for security"
