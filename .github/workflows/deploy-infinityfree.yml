@@ -95,6 +95,6 @@ jobs:
         echo "3. Make sure config.php is NOT in git (it's in .gitignore)"
         echo ""
         echo "📝 Next steps:"
-        echo "1. Visit: https://php-cicd.free.nf/migrate-secure.php?password=your_secret_password_123"
+        echo "1. Visit: https://php-cicd.free.nf/migrate.php?password=your_secret_password_123"
         echo "2. Run pending migrations"
-        echo "3. Delete migrate-secure.php for security"
+        echo "3. Delete migrate.php for security"
