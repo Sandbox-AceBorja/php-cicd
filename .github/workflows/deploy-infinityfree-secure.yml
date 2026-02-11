@@ -1,4 +1,4 @@
-name: Deploy to InfinityFree
+name: Deploy to InfinityFree (Secure)
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
         extensions: mbstring, xml, ctype, json, pdo, pdo_mysql
 
     - name: Validate PHP syntax
-      run: find ./src -name "*.php" -exec php -l {} \;
+      run: find ./src -name "*.php" -not -name "config.php" -exec php -l {} \;
 
     - name: Check for syntax errors
       run: |
@@ -94,7 +94,5 @@ jobs:
         echo "2. Or create config.php on server by copying config.example.php"
         echo "3. Make sure config.php is NOT in git (it's in .gitignore)"
         echo ""
-        echo "📝 Next steps:"
-        echo "1. Visit: https://php-cicd.free.nf/migrate-secure.php?password=your_secret_password_123"
-        echo "2. Run pending migrations"
-        echo "3. Delete migrate-secure.php for security"
+        echo "📝 Optional - Run migrations:"
+        echo "Visit: https://php-cicd.free.nf/migrate.php?password=your_secret_password_123"

@@ -2,6 +2,10 @@
 .env
 .env.local
 
+# Database configuration (contains sensitive credentials)
+src/config.php
+config.php
+
 # Docker volumes
 mysql_data/
 

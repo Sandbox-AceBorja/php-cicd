@@ -1,35 +1,13 @@
 <?php
+// Load database configuration
+require_once __DIR__ . '/config.php';
 
-$isLocal = in_array($_SERVER['HTTP_HOST'], ['localhost:8080', '127.0.0.1']);
-
-if ($isLocal) {
-    // LOCAL
-    $host = 'mysql';
-    $db = 'myapp_db';
-    $user = 'myapp_user';
-    $pass = 'myapp_password';
-} else {
-    // PRODUCTION (InfinityFree)
-    $host = 'sql309.infinityfree.com';
-    $db = 'if0_41129394_myapp_db';
-    $user = 'if0_41129394';
-    $pass = 'mTwxVdLtdP';
-}
-
-$charset = 'utf8mb4';
-
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
-
+// Get database connection
 try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
+    $pdo = getDBConnection();
     $connection_status = "✓ Database connected successfully!";
 } catch (\PDOException $e) {
-    $connection_status = "✗ Connection failed: " . $e->getMessage();
+    $connection_status = "✗ Connection failed: Please check your config.php";
     $pdo = null;
 }
 ?>
@@ -111,6 +89,7 @@ try {
             margin-top: 10px;
         }
         .badge-success { background: #28a745; color: white; }
+        .badge-warning { background: #ffc107; color: #000; }
     </style>
 </head>
 <body>
@@ -142,7 +121,7 @@ try {
         <div class="info-box">
             <h3>🗄️ Database Information</h3>
             <div class="info-item">
-                <span class="label">Database Name:</span> <?php echo $db; ?>
+                <span class="label">Database Name:</span> <?php echo DB_NAME; ?>
             </div>
             <div class="info-item">
                 <span class="label">MySQL Version:</span> 
@@ -201,13 +180,13 @@ try {
                 <li>✓ Automatic FTP deployment to InfinityFree</li>
                 <li>✓ PHP syntax validation</li>
                 <li>✓ MySQL database integration</li>
+                <li>✓ Secure config-based credentials</li>
             </ul>
             <br>
             <h3>ℹ️ About Me:</h3>
             <p>Developed by <b>Ace Borja</b></p>
             <p>Follow me on <a href="https://github.com/Sandbox-AceBorja">GitHub</a> for more projects!</p>
             <p>Visit my <a href="https://aceborja.vercel.app/">Portfolio</a> for more information!</p>
-            
         </div>
     </div>
 </body>
