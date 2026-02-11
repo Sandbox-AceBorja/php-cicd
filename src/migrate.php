@@ -3,29 +3,43 @@
  * Database Migration Runner
  * 
  * Run this file to apply pending migrations
- * URL: https://php-cicd.free.nf/migrate.php
+ * URL: https://php-cicd.free.nf/migrate.php?password=your_secret_password_123
  * 
- * Security: Add password protection or delete after use!
+ * Security: Password protected - DELETE after use!
  */
 
-// Database configuration
-$host = 'sql309.infinityfree.com';
-$db = 'if0_41129394_myapp_db';
-$user = 'if0_41129394';
-$pass = 'mTwxVdLtdP';
+// Load database configuration
+require_once __DIR__ . '/config.php';
 
 // Simple password protection (change this!)
 $migration_password = 'your_secret_password_123';
 
 // Check password
 if (!isset($_GET['password']) || $_GET['password'] !== $migration_password) {
+    http_response_code(403);
     die('❌ Unauthorized. Use: migrate.php?password=your_secret_password_123');
 }
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
+    $pdo = getDBConnection();
+    
+    echo "<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Database Migration Runner</title>
+    <style>
+        body { font-family: monospace; background: #1e1e1e; color: #d4d4d4; padding: 20px; }
+        .success { color: #4ec9b0; }
+        .error { color: #f48771; }
+        .info { color: #569cd6; }
+        .warning { color: #dcdcaa; }
+        pre { background: #2d2d2d; padding: 15px; border-radius: 5px; }
+        h2 { color: #569cd6; }
+    </style>
+</head>
+<body>";
     
     echo "<h2>🔄 Database Migration Runner</h2>";
     echo "<pre>";
@@ -38,7 +52,7 @@ try {
             executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ");
-    echo "✓ Migrations table ready\n\n";
+    echo "<span class='success'>✓ Migrations table ready</span>\n\n";
     
     // Get executed migrations
     $stmt = $pdo->query("SELECT migration_name FROM migrations");
@@ -48,8 +62,9 @@ try {
     $migrations_dir = __DIR__ . '/migrations';
     
     if (!is_dir($migrations_dir)) {
-        echo "❌ Migrations directory not found!\n";
-        echo "Create folder: /migrations/\n";
+        echo "<span class='error'>❌ Migrations directory not found!</span>\n";
+        echo "<span class='info'>Create folder: /migrations/</span>\n";
+        echo "</pre></body></html>";
         exit;
     }
     
@@ -63,12 +78,12 @@ try {
         $migration_name = basename($file);
         
         if (in_array($migration_name, $executed)) {
-            echo "⏭️  SKIP: {$migration_name} (already executed)\n";
+            echo "<span class='info'>⏭️  SKIP: {$migration_name} (already executed)</span>\n";
             continue;
         }
         
         $pending++;
-        echo "🔄 Running: {$migration_name}\n";
+        echo "<span class='warning'>🔄 Running: {$migration_name}</span>\n";
         
         try {
             $sql = file_get_contents($file);
@@ -78,29 +93,32 @@ try {
             $stmt = $pdo->prepare("INSERT INTO migrations (migration_name) VALUES (?)");
             $stmt->execute([$migration_name]);
             
-            echo "✅ SUCCESS: {$migration_name}\n\n";
+            echo "<span class='success'>✅ SUCCESS: {$migration_name}</span>\n\n";
             $applied++;
             
         } catch (PDOException $e) {
-            echo "❌ FAILED: {$migration_name}\n";
-            echo "Error: " . $e->getMessage() . "\n\n";
+            echo "<span class='error'>❌ FAILED: {$migration_name}</span>\n";
+            echo "<span class='error'>Error: " . $e->getMessage() . "</span>\n\n";
         }
     }
     
     echo "\n" . str_repeat("=", 50) . "\n";
-    echo "📊 Summary:\n";
+    echo "<span class='info'>📊 Summary:</span>\n";
     echo "   Total migrations: " . count($files) . "\n";
     echo "   Already executed: " . count($executed) . "\n";
     echo "   Pending: {$pending}\n";
     echo "   Applied now: {$applied}\n";
     echo str_repeat("=", 50) . "\n";
     
-    echo "\n✨ Migration complete!\n";
-    echo "\n⚠️  SECURITY: Delete this file after use or add better authentication!\n";
+    echo "\n<span class='success'>✨ Migration complete!</span>\n";
+    echo "\n<span class='error'>⚠️  SECURITY: Delete this file after use!</span>\n";
     
-    echo "</pre>";
+    echo "</pre></body></html>";
     
 } catch (PDOException $e) {
-    echo "❌ Database connection failed: " . $e->getMessage();
+    echo "<pre>";
+    echo "<span class='error'>❌ Database connection failed: " . $e->getMessage() . "</span>";
+    echo "\n<span class='info'>Check your config.php file!</span>";
+    echo "</pre>";
 }
 ?>
